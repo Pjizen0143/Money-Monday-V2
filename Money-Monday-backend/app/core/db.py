@@ -24,6 +24,12 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
+def get_session_local() -> Session:
+    return Session(engine)
+
+SessionLocal = get_session_local()
+
+
 def init_db():
     # ใช้สร้างตาราง database
 
