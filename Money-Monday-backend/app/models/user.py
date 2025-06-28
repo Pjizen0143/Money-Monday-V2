@@ -10,7 +10,13 @@ class UserBase(SQLModel):
 
 
 # Properties to receive via API on creation
+class UserCreate(UserBase):
+    # สำหรับสร้าง User
+    password: str = Field(min_length=8, max_length=32)
+
+
 class UserRegister(SQLModel):
+    # สำหรับรับข้อมูลจาก User
     email: EmailStr = Field(max_length=255)
     username: str = Field(max_length=32)
     password: str = Field(min_length=8, max_length=32)
