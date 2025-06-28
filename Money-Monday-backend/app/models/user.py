@@ -13,7 +13,7 @@ class UserBase(SQLModel):
 class UserRegister(SQLModel):
     email: EmailStr = Field(max_length=255)
     username: str = Field(max_length=32)
-    password: str = Field(max_length=32)
+    password: str = Field(min_length=8, max_length=32)
 
 
 # Properties to receive via API on update, all are optional
@@ -28,8 +28,8 @@ class UserUpdatePassword(SQLModel):
 
 
 # database model
-class User(UserBase):
-    user_id: int = Field(default=None, nullable=False, index=True)
+class User(UserBase, table=True):
+    user_id: int = Field(default=None, nullable=False, index=True, primary_key=True)
     hashed_password: str
 
 # Properties to return via API, id is always required
