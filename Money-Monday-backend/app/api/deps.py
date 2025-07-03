@@ -7,11 +7,15 @@ from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
 
 from app.core.config import settings
-from app.core.db import SessionDep, SessionLocal
+from app.core.db import SessionDep
 from app.models import User
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_BETA_STR}/login"
+    # ใช้บอก Swagger ว่า Login ที่ไหน
+    # เมื่อมี request เข้ามามันจะมองหา Header Authorization
+    # ถ้ามีในรูปแบบ Bearer จะทำการดึง Token ออกมา
+    # ถ้าไม่มี คืน HTTP 401 Unauthorized
 )
 
 TokenDep = Annotated[str, Depends(reusable_oauth2)]
@@ -20,7 +24,7 @@ TokenDep = Annotated[str, Depends(reusable_oauth2)]
 def get_current_user(session: SessionDep, token: TokenDep) -> User:
     try:
         payload = jwt.decode(
-            token, "KEY", algorithms=["HS256"]
+            token, settings.SECRET_KEY, algorithms=settings.ALGORITHM
         )
         user_id = payload.get("user_id")
     except (InvalidTokenError, ValidationError):
