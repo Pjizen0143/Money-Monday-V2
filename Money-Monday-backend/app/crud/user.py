@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 
 from app.models.user import User, UserCreate
+from app.models.utils import Message
 from app.core.security import verify_password, get_password_hash
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -15,6 +16,12 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
     session.commit()  # ยืนยัน บันทึกลง dataabse จริง
     session.refresh(db_object)  # ดึงค่าล่าสุดกลับมา เช่น id ที่เพิ่งถูกสร้าง
     return db_object
+
+
+def delete_user(*, session: Session, user: User) -> Message:
+    session.delete(user)
+    session.commit()
+    return Message(message="User deleted!")
 
 
 def get_user_by_email(*, session: Session, email: str) -> User | None:
