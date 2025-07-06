@@ -44,5 +44,6 @@ class UserPublic(UserBase):
 
 
 class UsersPublic(SQLModel):
-    data: list[UserPublic]
     count: int
+    data: list[UserPublic]
+
