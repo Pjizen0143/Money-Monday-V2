@@ -26,7 +26,7 @@ def get_current_user(session: SessionDep, token: TokenDep) -> User:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=settings.ALGORITHM
         )
-        user_id = payload.get("user_id")
+        user_id = int(payload.get("user_id"))
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
